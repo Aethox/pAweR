@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Hello!</title>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <link rel="stylesheet" href="/style.css">
+        <script src="https://aframe.io/releases/1.7.0/aframe.min.js"></script>
+        <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar.js"></script>
+    </head>  
+    <body>
+        <a-scene embedded arjs renderer="antialias: false; logarithmicDepthBuffer:true">
+            <a-assets>
+                <video id="pawer-logo" 
+                       autoplay="true" 
+                       playsinline 
+                       preload="auto" 
+                       src="Assets/pawerLogoMusic.mp4"
+                       crossorigin="anonymous"
+                       fetchpriority="high"></video>
+            </a-assets>
+            
+            <a-marker type="pattern" url="Assets/paw2.patt">
+                <a-video src="#pawer-logo" width="5" height="5" position="0 0 0" rotation="-90 0 0"></a-video>
+            </a-marker>
+            <a-entity camera="zoom: 1; fov: 60" magicWindowTrackingEnabled></a-entity>
+        </a-scene>
+        <script>
+        // Keep video playing even if marker is lost
+        document.querySelector('a-scene').addEventListener('markerLost', function (evt) {
+            var video = document.getElementById('pawer-logo');
+            if (video && video.paused) {
+            video.play();
+            }
+        });
+        </script>
+        
+    </body>
+</html>
