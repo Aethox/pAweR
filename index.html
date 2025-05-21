@@ -1,38 +1,40 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <title>Hello!</title>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <!-- import the webpage's stylesheet -->
-    <link rel="stylesheet" href="/style.css">
-    <script src="https://aframe.io/releases/1.7.0/aframe.min.js"></script>
-    <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar.js"></script>
-    <!-- import the webpage's javascript file -->
-    <!-- <script src="/script.js" defer></script> -->
-  </head>  
-  <body>
-    <a-scene embedded arjs='sourceType: webcam;'>
-        <a-assets>
-            <video id="penguin-sledding" autoplay="true" src="http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"></video>
-        </a-assets>
+    <head>
+        <title>Hello!</title>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <link rel="stylesheet" href="/style.css">
+        <script src="https://aframe.io/releases/1.7.0/aframe.min.js"></script>
+        <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar.js"></script>
+    </head>  
+    <body>
+        <a-scene embedded arjs>
+            <a-assets>
+                <video id="penguin-sledding" autoplay="true" playsinline src="http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"></video>
+            </a-assets>
+            
+            <a-marker type="pattern" url="Assets/paw2.patt">
+                <a-video src="#penguin-sledding" width="5" height="5" position="0 0 0"></a-video>
+            </a-marker>
+            <a-entity camera></a-entity>
+        </a-scene>
+        <script>
+        // Keep video playing even if marker is lost
+        document.querySelector('a-scene').addEventListener('markerLost', function (evt) {
+            var video = document.getElementById('penguin-sledding');
+            if (video && video.paused) {
+            video.play();
+            }
+        });
+        </script>
         
-        <a-marker-camera type="pattern" url="Assets/paw2.patt">
-            <!--<a-entity geometry="primitive: box; width: 1; height: 1; depth: 1" material="color: #4CC3D9"></a-entity>-->
-            <a-video src="#penguin-sledding" width="5" height="5" position="0 0 0"></a-video>
-        </a-marker-camera>
-	</a-scene>
-    
-    <p>
-      I'm your cool new webpage. Made with <a href="https://glitch.com">Glitch</a>!
-    </p>
-
-    <!-- include the Glitch button to show what the webpage is about and
-          to make it easier for folks to view source and remix -->
-    <div class="glitchButton" style="position:fixed;top:20px;right:20px;"></div>
-    <script src="https://button.glitch.me/button.js"></script>
-  </body>
+        <p>
+            I'm your cool new webpage. Made with <a href="https://glitch.com">Glitch</a>!
+        </p>
+        <div class="glitchButton" style="position:fixed;top:20px;right:20px;"></div>
+        <script src="https://button.glitch.me/button.js"></script>
+    </body>
 </html>
-
