@@ -48,44 +48,61 @@
             }
         </style>
         <script>
-        // Initialize video functionality
+        // Initialize video functionality and reduce flickering
         window.addEventListener('load', function() {
             const video = document.getElementById('pawer-logo');
             const videoEntity = document.getElementById('video-entity');
             const marker = document.querySelector('a-marker');
-            
+            const assets = document.querySelectorAll('a-image, a-plane, a-video');
+
             // Make sure video is loaded and ready
             video.load();
             video.muted = false;
-            
+
+            // Preload assets to reduce flickering
+            assets.forEach(asset => {
+            asset.addEventListener('materialtextureloaded', () => {
+                asset.setAttribute('visible', true);
+            });
+            asset.setAttribute('visible', false); // Hide initially
+            });
+
             // Handle marker found event
             marker.addEventListener('markerFound', function() {
-                if (video.paused) {
-                    video.play();
-                }
-                videoEntity.setAttribute('visible', true);
-                videoEntity.style.opacity = "1";
+            if (video.paused) {
+                video.play();
+            }
+            videoEntity.setAttribute('visible', true);
+            videoEntity.style.opacity = "1";
+
+            // Ensure all assets are visible
+            assets.forEach(asset => {
+                asset.setAttribute('visible', true);
             });
-            
-            // Keep video playing even if marker is lost
+            });
+
+            // Handle marker lost event
             marker.addEventListener('markerLost', function() {
-                // Don't pause the video, just manage visibility
-                videoEntity.style.opacity = "0.9"; // Slightly fade but keep visible
-                // Still ensure the video is playing
-                if (video.paused) {
-                    video.play();
-                }
+            videoEntity.style.opacity = "0.9"; // Slightly fade but keep visible
+
+            // Keep assets visible to reduce flickering
+            assets.forEach(asset => {
+                asset.setAttribute('visible', true);
             });
-            
+
+            // Ensure the video keeps playing
+            if (video.paused) {
+                video.play();
+            }
+            });
+
             // Force play on user interaction (needed for mobile)
             document.addEventListener('click', function() {
-                if (video.paused) {
-                    video.play();
-                }
+            if (video.paused) {
+                video.play();
+            }
             });
         });
         </script>
-        </script>
-
     </body>
 </html>
