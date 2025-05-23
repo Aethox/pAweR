@@ -81,19 +81,10 @@
             //     window.open('https://wa.me/+573157029102', '_blank');
             // });
 
-            AFRAME.registerComponent('open-whatsapp', {
-                init: function () {
-                    this.el.addEventListener('click', function (evt) {
-                        console.log('WhatsApp logo clicked!');
-                        window.open('https://wa.me/+573157029102', '_blank');
-                    });
-            }
-            });
-
-            //document.querySelector('#wsp').addEventListener('click', function() {
-            //console.log('WhatsApp logo clicked');  
+            document.querySelector('#wsp').addEventListener('click', function() {
+            console.log('WhatsApp logo clicked');  
             // window.open('https://wa.me/+573157029102', '_blank');
-            //});
+            });
 
             // Make sure video is loaded and ready
             video.load();
