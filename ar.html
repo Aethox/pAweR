@@ -1,143 +1,69 @@
-<!DOCTYPE html>
-<html lang="en">
-    <head>
-        <title>PawerGroom - AR Experience</title>
-        <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
-        <meta name="apple-mobile-web-app-capable" content="yes">
-        <link rel="stylesheet" href="/style.css">
-        <script src="https://aframe.io/releases/1.7.0/aframe.min.js"></script>
-        <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar.js"></script>
-    </head>  
-    <body>
-        <a-scene embedded 
-                 arjs="trackingMethod: best; debugUIEnabled: false; minConfidence: 0.6;" 
-                 renderer="logarithmicDepthBuffer: true;">
-            <a-assets>
-                <video id="pawer-logo" 
-                       autoplay="true" 
-                       playsinline 
-                       preload="auto" 
-                       src="Assets/pawerLogoMusic.mp4"
-                       crossorigin="anonymous"
-                       fetchpriority="high"></video>
-                <img id="cat" src="Assets/Cat.svg" crossorigin="anonymous"></img>
-                <img id="info" src="Assets/Info.png" crossorigin="anonymous"></img>
-                <img id="cursor" src="Assets/cursor.svg" crossorigin="anonymous"></img>
-                <img id="dogs" src="Assets/Dogs.svg" crossorigin="anonymous"></img>
-                <img id="arrow" src="Assets/Arrow.png" crossorigin="anonymous"></img>
-                <img id="wsplogo" src="Assets/WhatsAppLogo.png" crossorigin="anonymous"></img>
-            </a-assets>
-        
-            <a-marker type="pattern" url="Assets/paw2.patt" emit-events="true" smooth="true" smoothCount="50" smoothTolerance="0.001" smoothThreshold="0.002">
-                <a-entity id="grupo-ar" position="0 0 0">
-                    <a-image src="#cat" position="-3.5 0 -9" width="5" height="5" rotation="-90 10 0"></a-image>
-                    <a-image src="#dogs" position="1 0 -9" width="5" height="5" rotation="-90 0 0"></a-image>
-                    <a-image src="#arrow" position="-4 0 -4" width="2" height="2" rotation="-90 0 0"></a-image>
-                    <a-image src="#wsplogo" 
-                            class="clickable"
-                            open-whatsapp
-                            position="0 0.1 2.01" 
-                            width="1.2" 
-                            height="1.2" 
-                            rotation="-90 0 0"
-                            geometry="primitive: plane; width: 1.2; height: 1.2;"
-                            material="shader: flat">
-                    </a-image>
-                    <a-plane src="#info" position="4 0 -3" rotation="-90 0 0" width="4" height="8.2"></a-plane>
-                    <a-image src="#cursor" position="3.5 0 -5" width="1.5" height="1.5" rotation="-90 0 0" shadow="receive: true"></a-image>
-                    <a-video id="video-entity" src="#pawer-logo" width="3" height="3" position="0 0 0" rotation="-90 0 0"></a-video>
-                </a-entity>
-            </a-marker>
-            <a-entity camera="zoom: 1; fov: 60">
-                <a-cursor
-                    raycaster="objects: .clickable"
-                    fuse="false"
-                    material="color: blue; shader: flat"
-                    geometry="primitive: circle; radius: 0.008; "
-                    position="0 0 -1">
-                </a-cursor>
-            </a-entity>
-        <style>
-            .a-enter-vr {
-                display: none;
-            }
-            #video-entity {
-                opacity: 1;
-                transition: opacity 0.5s ease-in-out;
-            }
-        </style>
-        <script>
-          AFRAME.registerComponent('open-whatsapp', {
-                init: function () {
-                this.el.addEventListener('click', () => {
-                    console.log("🔗 Redirigiendo a WhatsApp");
-                    window.open('https://wa.me/+573157029102', '_blank');
-                });
-                }
-            });
-        // Initialize video functionality and reduce flickering
-        window.addEventListener('load', function() {
-            const video = document.getElementById('pawer-logo');
-            const videoEntity = document.getElementById('video-entity');
-            const marker = document.querySelector('a-marker');
-            const assets = document.querySelectorAll('a-image, a-plane, a-video');
-            
-            // Add click event to redirect to WhatsApp link
-            // const wsplogo = document.querySelector('a-image[src="#wsplogo"]'); 
-            // wsplogo.addEventListener('click', function() {
-            //     window.open('https://wa.me/+573157029102', '_blank');
-            // });
+<!-- import aframe and then ar.js with image tracking / location based features -->
+<script src="https://cdn.jsdelivr.net/gh/aframevr/aframe@1c2407b26c61958baa93967b5412487cd94b290b/dist/aframe-master.min.js"></script>
+<script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar-nft.js"></script>
 
-            // Make sure video is loaded and ready
-            video.load();
-            video.muted = false;
+<!-- style for the loader -->
+<style>
+  .arjs-loader {
+    height: 100%;
+    width: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    background-color: rgba(0, 0, 0, 0.8);
+    z-index: 9999;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
 
-            // Preload assets to reduce flickering
-            assets.forEach(asset => {
-            asset.addEventListener('materialtextureloaded', () => {
-                asset.setAttribute('visible', true);
-            });
-            asset.setAttribute('visible', false); // Hide initially
-            });
+  .arjs-loader div {
+    text-align: center;
+    font-size: 1.25em;
+    color: white;
+  }
+</style>
 
-            // Handle marker found event
-            marker.addEventListener('markerFound', function() {
-            if (video.paused) {
-                video.play();
-            }
-            videoEntity.setAttribute('visible', true);
-            videoEntity.style.opacity = "1";
+<body style="margin : 0px; overflow: hidden;">
+  <!-- minimal loader shown until image descriptors are loaded. Loading may take a while according to the device computational power -->
+  <div class="arjs-loader">
+    <div>Loading, please wait...</div>
+  </div>
 
-            // Ensure all assets are visible
-            assets.forEach(asset => {
-                asset.setAttribute('visible', true);
-            });
-            });
-
-            // Handle marker lost event
-            marker.addEventListener('markerLost', function() {
-            videoEntity.style.opacity = "0.9"; // Slightly fade but keep visible
-
-            // Keep assets visible to reduce flickering
-            assets.forEach(asset => {
-                asset.setAttribute('visible', true);
-            });
-
-            // Ensure the video keeps playing
-            if (video.paused) {
-                video.play();
-            }
-            });
-
-            // Force play on user interaction (needed for mobile)
-            document.addEventListener('click', function() {
-            if (video.paused) {
-                video.play();
-            }
-            });
-        });
-        </script>
-    </body>
-</html>
+  <!-- a-frame scene -->
+  <a-scene
+    vr-mode-ui="enabled: false;"
+    renderer="logarithmicDepthBuffer: true;"
+    embedded
+    arjs="trackingMethod: best; sourceType: webcam;debugUIEnabled: false;"
+  >
+    <!-- a-nft is the anchor that defines an Image Tracking entity -->
+    <!-- on 'url' use the path to the Image Descriptors created before. -->
+    <!-- the path should end with the name without the extension e.g. if file is 'pinball.fset' the path should end with 'pinball' -->
+    <a-assets>
+        <video id="pawer-logo" autoplay muted playsinline preload="auto"
+           src="Assets/pawerLogoMusic.mp4" crossorigin="anonymous"></video>
+    </a-assets>
+    <a-nft
+      type="nft"
+      url="Assets/NFT/logo"
+      smooth="true"
+      smoothCount="10"
+      smoothTolerance=".01"
+      smoothThreshold="5"
+    >
+      <!-- as a child of the a-nft entity, you can define the content to show. here's a GLTF model entity -->
+      <a-entity>
+        <a-video
+          src="#pawer-logo"
+          width="400"
+          height="200"
+          position="300 0 0"
+          rotation="-90 0 0"
+        ></a-video>
+      </a-entity>
+    </a-nft>
+    <!-- static camera that moves according to the device movemenents -->
+    <a-entity camera></a-entity>
+  </a-scene>
+</body>
